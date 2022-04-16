@@ -2,7 +2,7 @@
 
 
 ## 🧾 Description
-Onboarding component using advanced animations in FlatList
+Onboarding component using advanced animations in FlatList component
 
 ## 🖼 GIF 
 <p align="center">
