@@ -52,28 +52,64 @@ const DATA = [
 ]
 
 
-//component
-// const Indicator=({scrollX})=>{
- 
-// }
+
+const Indicator=({scrollX})=>{
+  return <View style={{position:'absolute', bottom:100, flexDirection:'row'}}>
+    {DATA.map((_, i)=>{
+      return<View key={`indicator-${i}`} 
+      style={{
+        height:10,
+        width: 10,
+        borderRadius:5,
+        backgroundColor:'#333',
+        margin:10,
+
+      }} />
+    })}
+  </View>
+}
+
+const Backdrop =({scrollx})=>{
+  const backgroundColor = scrollx.interpolate({
+    inputRange:bgs.map((_,i) => i * width),
+    outputRange:bgs.map((bg)=>bg),
+  });
+
+  return(<Animated.View 
+  style={[
+    StyleSheet.absoluteFillObject,
+    {
+      backgroundColor,
+  }
+]} 
+/>)
+}
 
 export default function App() {
+
   const scrollX = useRef(new Animated.Value(0)).current;
 
 
 
   return (
     <View style={styles.container}>
+    
     <StatusBar hidden />
 
+    <Backdrop scrollx={scrollX}/>
+
      <Animated.FlatList
+      data={DATA}
+      keyExtractor={(item)=>item.key}
+      horizontal
+      scrollEventThrottle={32}
+      onScroll={ Animated.event(
+        [{ nativeEvent: { contentOffset:{ x:scrollX } } } ],
+        { useNativeDriver:false } 
+        )}
      contentContainerStyle={{paddingBottom:100}}
      showsHorizontalScrollIndicator={false}
-     data={DATA}
-     scrollEventThrottle={32}
-     onScroll={Animated.event([{nativeEvent: {contentoffset:{x:scrollX}}}])}
-     horizontal
-     keyExtractor={item=>item.key}
+     pagingEnabled
      renderItem={({item})=>{
        return( 
 
@@ -87,7 +123,7 @@ export default function App() {
          </View>
 
          <View style={{flex:0.3}}>
-           <Text style={{fontWeight:'800', fontSize:24, marginBottom:10}} >{item.title}</Text>
+           <Text style={{color:'#FFFF',fontWeight:'800', fontSize:28, marginBottom:10}} >{item.title}</Text>
            <Text style={{fontWeight:'300'}} >{item.description}</Text>
          </View>
 
@@ -96,7 +132,7 @@ export default function App() {
        )}}
        />
 
-       {/* <Indicator scrollx={scrollX}/> */}
+       <Indicator scrollX={scrollX}/>
 
   </View>
   );
