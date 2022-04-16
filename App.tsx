@@ -56,13 +56,34 @@ const DATA = [
 const Indicator=({scrollX})=>{
   return <View style={{position:'absolute', bottom:100, flexDirection:'row'}}>
     {DATA.map((_, i)=>{
-      return<View key={`indicator-${i}`} 
+     
+     const inputRange = [(i - 1) * width, i * width, (i + 1) * width];
+
+     const scale = scrollX.interpolate({
+        inputRange,
+        outputRange:[0.8, 1.4, 0.8],
+        extrapolate:'clamp'
+     });
+
+     const opacity = scrollX.interpolate({
+      inputRange,
+      outputRange:[0.4, 0.9, 0.4],
+      extrapolate:'clamp'
+   });
+
+      return<Animated.View key={`indicator-${i}`} 
       style={{
         height:10,
         width: 10,
         borderRadius:5,
-        backgroundColor:'#333',
+        backgroundColor:'#FFFF',
         margin:10,
+        opacity,
+        transform: [
+          {
+            scale
+          }
+        ]
 
       }} />
     })}
@@ -85,6 +106,50 @@ const Backdrop =({scrollx})=>{
 />)
 }
 
+
+const Square = ({scrollX})=>{
+  const YOLO =Animated.modulo(Animated.divide(
+    Animated.modulo(scrollX, width),
+    new Animated.Value(width)
+  ),1);
+
+  const rotate = YOLO.interpolate({
+    inputRange:[0, 0.5, 1],
+    outputRange:['35deg', '0deg','35deg']
+
+  })
+
+  const translateX = YOLO.interpolate({
+    inputRange:[0, 0.5, 1],
+    outputRange:[0, -height, 0]
+
+  })
+
+  return (
+  <Animated.View
+  style={{
+    width:height,
+    height:height,
+    backgroundColor: '#FFF',
+    borderRadius:86,
+    top: -height * 0.6,
+    left: -height * 0.3,
+    position:'absolute',
+    transform: [
+      {
+      rotate,
+
+    },{
+      translateX
+    }]
+
+  }}>
+
+  </Animated.View>
+  )
+
+}
+
 export default function App() {
 
   const scrollX = useRef(new Animated.Value(0)).current;
@@ -97,7 +162,7 @@ export default function App() {
     <StatusBar hidden />
 
     <Backdrop scrollx={scrollX}/>
-
+     <Square scrollX={scrollX} />
      <Animated.FlatList
       data={DATA}
       keyExtractor={(item)=>item.key}
@@ -124,7 +189,7 @@ export default function App() {
 
          <View style={{flex:0.3}}>
            <Text style={{color:'#FFFF',fontWeight:'800', fontSize:28, marginBottom:10}} >{item.title}</Text>
-           <Text style={{fontWeight:'300'}} >{item.description}</Text>
+           <Text style={{fontWeight:'300', color:'#FFF'}} >{item.description}</Text>
          </View>
 
        </View>
