@@ -1,5 +1,10 @@
 <h1 align="center">Advanced FlatList-Animation</h1>
 
+<p align="center">
+  <a href="https://github.com/Victor5g/react-native-advanced-flatList-animation/blob/main/LICENSE">
+     <img alt="License" src="https://img.shields.io/static/v1?label=license&message=MIT&color=8257E5&labelColor=000000">
+  </a>
+</p>
 
 ## 🧾 Description
 Onboarding component using advanced animations in FlatList component
